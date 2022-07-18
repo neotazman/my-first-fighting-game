@@ -1,0 +1,8 @@
+* {
+    outline: 1px solid crimson
+}
+
+canvas {
+    width: 95%;
+    height: 95%;
+}
