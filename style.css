@@ -3,6 +3,8 @@
 }
 
 canvas {
-    width: 95%;
-    height: 95%;
+    width: 98vw;
+    height: 95vh;
+    margin: 0;
+    padding: 0;
 }
