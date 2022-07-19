@@ -7,11 +7,11 @@ const canvasContext = canvas.getContext('2d');
 
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
-const gravity = 0.1
+const gravity = 0.5
 
 // the character sprites
 class Sprite {
-    constructor({position, velocity}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass in the arguments
+    constructor({position, velocity}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
         this.position = position
         this.velocity = velocity
         this.width = 20
@@ -43,7 +43,7 @@ const player = new Sprite({
 
 // the enemy
 const enemy = new Sprite({
-    position: {x: 40, y: 80},
+    position: {x: 60, y: 80},
     velocity: {x: 0, y: 1}
 })
 
@@ -56,9 +56,9 @@ const keys = {
     a: { // left
         isPressed: false,
     },
-    w: { // jump
-        isPressed: false,
-    },
+    // w: { // jump
+    //     isPressed: false,
+    // },
 
     // enemy
     ArrowRight: { // right
@@ -67,9 +67,9 @@ const keys = {
     ArrowLeft: { // left
         isPressed: false,
     },
-    ArrowUp: { // jump
-        isPressed: false,
-    },
+    // ArrowUp: { // jump
+    //     isPressed: false,
+    // },
 }
 
 // the animation
@@ -82,15 +82,15 @@ function animate () {
 
     player.velocity.x = 0
     if(keys.a.isPressed && player.lastKey === 'a') {
-        player.velocity.x = -1
+        player.velocity.x = -5
     } else if(keys.d.isPressed && player.lastKey === 'd') {
-        player.velocity.x = 1
+        player.velocity.x = 5
     }
     enemy.velocity.x = 0
     if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -1
+        enemy.velocity.x = -5
     } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x = 1
+        enemy.velocity.x = 5
     }
 }
 
@@ -102,10 +102,10 @@ window.addEventListener('keydown', (e) => {
     switch(e.key) {
         case 'd': keys.d.isPressed = true; player.lastKey = e.key; break // move right
         case 'a': keys.a.isPressed = true; player.lastKey = e.key; break // move left
-        case 'w': player.velocity.y = -5; break // jump
+        case 'w': player.velocity.y = -10; break // jump
         case 'ArrowRight': keys.ArrowRight.isPressed = true; enemy.lastKey = 'ArrowRight'; break // move right
         case 'ArrowLeft': keys.ArrowLeft.isPressed = true; enemy.lastKey = 'ArrowLeft'; break // move left
-        case 'ArrowUp': enemy.velocity.y = -5; break // jump
+        case 'ArrowUp': enemy.velocity.y = -10; break // jump
     }
 }) 
 
