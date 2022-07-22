@@ -11,21 +11,44 @@ const gravity = 0.5
 
 // the character sprites
 class Sprite {
-    constructor({position, velocity}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
+    constructor({position, velocity, color = 'green', offset}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
         this.position = position
         this.velocity = velocity
         this.width = 20
         this.height = 50
         this.lastKey
+        this.attackBox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            offset, // a object being passed direct into this.attackBox
+            width: 60,
+            height: 10,
+        }
+        this.color = color
+        this.isAttacking
     }
     draw () {
-        canvasContext.fillStyle = 'crimson'
+        canvasContext.fillStyle = this.color
         canvasContext.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+        // attack box
+        if(this.isAttacking) { // will only show attack boxes while attacking
+            canvasContext.fillStyle = 'goldenrod'
+            canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)            
+        }
+
     }
     update () {
         this.draw() // if you call the draw method inside of the update method, you don't have to call both functions to animate
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
+        // updates the shallow copy of this
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x
+        this.attackBox.position.y = this.position.y
+
+        // change the position based on the velocity
+        this.position.x += this.velocity.x 
+        this.position.y += this.velocity.y  
 
         if(this.position.y + this.height + this.velocity.y >= canvas.height) {
             this.velocity.y = 0
@@ -33,18 +56,28 @@ class Sprite {
             this.velocity.y += gravity
         }
     }
+    attack() {
+        this.isAttacking = true
+        setTimeout(() => {
+            this.isAttacking = false
+        }, 100)
+    }
 }
 
 // the player
 const player = new Sprite({
     position: {x: 0, y: 0},
-    velocity: {x: 0, y: 1}
+    velocity: {x: 0, y: 1},
+    color: 'crimson',
+    offset: {x: 0, y: 0}
 })
 
 // the enemy
 const enemy = new Sprite({
     position: {x: 60, y: 80},
-    velocity: {x: 0, y: 1}
+    velocity: {x: 0, y: 1},
+    color: 'blue',
+    offset: {x: -40, y: 0},
 })
 
 // control options
@@ -72,6 +105,15 @@ const keys = {
     // },
 }
 
+function collisionCheck ({attacker, target}) { // a function to check if the attack hit the target
+    return (
+        attacker.attackBox.position.x + attacker.attackBox.width >= target.position.x && 
+        attacker.attackBox.position.x <= target.position.x + target.width && 
+        attacker.attackBox.position.y + attacker.attackBox.height >= target.position.y && 
+        attacker.attackBox.position.y <= target.position.y + target.height
+    )
+}
+
 // the animation
 function animate () {
     window.requestAnimationFrame(animate)
@@ -80,17 +122,29 @@ function animate () {
     player.update()
     enemy.update()
 
+    // player movement
     player.velocity.x = 0
     if(keys.a.isPressed && player.lastKey === 'a') {
         player.velocity.x = -5
     } else if(keys.d.isPressed && player.lastKey === 'd') {
         player.velocity.x = 5
     }
+    // enemy movement
     enemy.velocity.x = 0
     if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5
     } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5
+    }
+
+    // collision checking
+    if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
+        player.isAttacking = false
+        console.log('hit')
+    }
+    if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
+        enemy.isAttacking = false
+        console.log('enemy hit')
     }
 }
 
@@ -98,26 +152,29 @@ animate()
 
 // control listeners
 window.addEventListener('keydown', (e) => {
-    console.log(e.key)
     switch(e.key) {
+        // player
         case 'd': keys.d.isPressed = true; player.lastKey = e.key; break // move right
         case 'a': keys.a.isPressed = true; player.lastKey = e.key; break // move left
         case 'w': player.velocity.y = -10; break // jump
+        case ' ': player.attack(); break // attack
+        // enemy
         case 'ArrowRight': keys.ArrowRight.isPressed = true; enemy.lastKey = 'ArrowRight'; break // move right
         case 'ArrowLeft': keys.ArrowLeft.isPressed = true; enemy.lastKey = 'ArrowLeft'; break // move left
         case 'ArrowUp': enemy.velocity.y = -10; break // jump
+        case 'ArrowDown': enemy.attack(); break // attack
     }
 }) 
 
 window.addEventListener('keyup', (e) => {
-    console.log(e.key)
     switch(e.key) {
         case 'd': keys.d.isPressed = false; break 
         case 'a': keys.a.isPressed = false; break
-        case 'w': keys.w.isPressed = false; break
+        case 'w': break
+
         case 'ArrowRight': keys.ArrowRight.isPressed = false; break 
         case 'ArrowLeft': keys.ArrowLeft.isPressed = false; break
-        case 'ArrowUp': keys.ArrowUp.isPressed = false; break
+        case 'ArrowUp': break
     }
 })  
 
