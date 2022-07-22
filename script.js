@@ -7,6 +7,10 @@ const canvasContext = canvas.getContext('2d');
 
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
+const timerElement = document.getElementById('timer');
+let time = 60
+let countDown = setInterval(() => {time-= 1; console.log(time)}, 1000)
+
 const gravity = 0.5
 
 // the character sprites
@@ -122,6 +126,13 @@ function animate () {
     player.update()
     enemy.update()
 
+    if(time < 0) {
+        clearInterval(countDown)
+    } else {
+        timerElement.innerText = JSON.stringify(time)
+    }
+    
+
     // player movement
     player.velocity.x = 0
     if(keys.a.isPressed && player.lastKey === 'a') {
@@ -148,6 +159,12 @@ function animate () {
         console.log('enemy hit')
     }
 }
+
+
+
+
+
+
 
 animate()
 
