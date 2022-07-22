@@ -7,6 +7,10 @@ this is based from a youtube tutorial: https://www.youtube.com/watch?v=vyqbNFMDR
 # Things I Changed
 
 html (HTML5)
-css (% as opposed to pixels)
+css 
+    a) style.css as opposed to inline
+    b) % as opposed to pixels
+    c) gameInfo is set to flex (he changed to that anyway)
 variable names (to something i understand)
+
 

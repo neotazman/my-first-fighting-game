@@ -141,6 +141,7 @@ function animate () {
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
         player.isAttacking = false
         console.log('hit')
+        document.querySelector('#enemyHealth').style.width = '20%'
     }
     if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
         enemy.isAttacking = false

@@ -1,5 +1,6 @@
 * {
-    outline: 1px solid crimson
+    outline: 1px solid crimson;
+    box-sizing: border-box;
 }
 
 canvas {
@@ -7,4 +8,31 @@ canvas {
     height: 95vh;
     margin: 0;
     padding: 0;
+}
+
+.healthBar {
+    background-color: yellow;
+    width: 100%;
+    height: 7vh;
+}
+
+#container {
+    position: relative;
+    display: inline-block;
+}
+
+#gameInfo {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#timer {
+    background-color: rgb(147, 255, 88);
+    width: 175px;
+    height: 175px; /* i want this box to be a square so i'm using the same exact value as width; i know vw measures the width not the height */
+    border-radius: 25%;
+    flex-shrink: 0;
 }
