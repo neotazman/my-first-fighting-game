@@ -10,7 +10,7 @@ canvas {
     padding: 0;
 }
 
-.healthBar {
+.emptyHealthBar {
     background-color: yellow;
     width: 100%;
     height: 7vh;
@@ -48,8 +48,12 @@ canvas {
     height: 7vh;
 }
 
-.emptyHealthBar {
+.healthBar {
     position: absolute;
     background-color: orange;
-    inset: 0; /* inset combines top, left, bottom and right into one selector*/
+    /* inset: 0; /* inset combines top, left, bottom and right into one selector*/
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

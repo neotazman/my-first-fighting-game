@@ -9,7 +9,7 @@ canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
 const timerElement = document.getElementById('timer');
 let time = 60
-let countDown = setInterval(() => {time-= 1; console.log(time)}, 1000)
+let countDown = setInterval(() => {time-= 1}, 1000)
 
 const gravity = 0.5
 
@@ -26,7 +26,7 @@ class Sprite {
                 x: this.position.x,
                 y: this.position.y,
             },
-            offset, // a object being passed direct into this.attackBox
+            offset, // an object being passed directly into this.attackBox
             width: 60,
             height: 10,
         }
@@ -93,7 +93,7 @@ const keys = {
     a: { // left
         isPressed: false,
     },
-    // w: { // jump
+    // w: { // jump and attack don't need an isPressed property because they aren't contradicted by other controls
     //     isPressed: false,
     // },
 
