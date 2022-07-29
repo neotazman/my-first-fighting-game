@@ -32,6 +32,7 @@ class Sprite {
         }
         this.color = color
         this.isAttacking
+        this.health = 100 //DO NOT RAISE ABOVE 100 -- it's being parsed into a percentage for the css
     }
     draw () {
         canvasContext.fillStyle = this.color
@@ -151,12 +152,13 @@ function animate () {
     // collision checking
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
         player.isAttacking = false
-        console.log('hit')
-        document.querySelector('#enemyHealth').style.width = '20%'
+        enemy.health-= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
     if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
         enemy.isAttacking = false
-        console.log('enemy hit')
+        player.health-= 20
+        document.querySelector('#playerHealth').style.width = player.health + '%'
     }
 }
 

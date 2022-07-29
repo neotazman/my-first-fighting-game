@@ -9,9 +9,16 @@ this is based from a youtube tutorial: https://www.youtube.com/watch?v=vyqbNFMDR
 html (HTML5)
 css 
     a) style.css as opposed to inline
+
     b) % as opposed to pixels
+
     c) gameInfo is set to flex (he changed to that anyway)
+
     d) did the timer on my own without watching the video
+
+    e) it would be much harder for me to figure out how to do reverseHealthBar on my own, so i'm ignoring it for right now
+
+    f) 
 variable names (to something i understand)
 
 

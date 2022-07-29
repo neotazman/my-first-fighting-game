@@ -30,7 +30,7 @@ canvas {
 }
 
 #timer {
-    background-color: rgb(147, 255, 88);
+    background-color: rgb(88, 119, 255);
     width: 175px;
     height: 175px; /* i want this box to be a square so i'm using the same exact value as width; i know vw measures the width not the height */
     border-radius: 25%;
@@ -50,10 +50,19 @@ canvas {
 
 .healthBar {
     position: absolute;
-    background-color: orange;
+    background-color: rgb(32, 249, 32);
     /* inset: 0; /* inset combines top, left, bottom and right into one selector*/
     top: 0;
-    left: 0;
+    left: 0; /* this would be taken out if i fix reverseHealthBar */
     right: 0;
     bottom: 0;
 }
+
+#reversehealthBar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* #enemyHealth {
+    left: 0; /* maybe not the cleanest way to do it 
+} */
