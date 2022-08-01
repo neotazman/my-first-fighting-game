@@ -66,3 +66,12 @@ canvas {
 /* #enemyHealth {
     left: 0; /* maybe not the cleanest way to do it 
 } */
+
+#endMessage {
+    position: absolute;
+    display: none; /* turn back to flex */
+    align-items: center;
+    justify-content: center;
+    inset: 0;
+    color: white;
+}

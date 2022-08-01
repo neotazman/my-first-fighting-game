@@ -7,9 +7,7 @@ const canvasContext = canvas.getContext('2d');
 
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
-const timerElement = document.getElementById('timer');
-let time = 60
-let countDown = setInterval(() => {time-= 1}, 1000)
+
 
 const gravity = 0.5
 
@@ -119,6 +117,33 @@ function collisionCheck ({attacker, target}) { // a function to check if the att
     )
 }
 
+function determineWinner({player, enemy, timerId}) {
+    clearTimeout(timerId)
+    document.querySelector('#endMessage').style.display = 'flex'
+    if(player.health === enemy.health) {
+        document.querySelector('#endMessage').innerHTML = 'Tie'
+    } else if (player.health > enemy.health) {
+        document.querySelector('#endMessage').innerHTML = 'Player 1 Wins'
+    } else if (player.health < enemy.health) {
+        document.querySelector('#endMessage').innerHTML = 'Player 2 Wins'
+    }
+}
+
+// const timerElement = document.getElementById('timer')
+let time = 60
+//let countDown = setInterval(() => {time--}, 1000) // this was what i came up with, below is the way he did it
+let timerId
+function countDown() { // the timer for the round
+    if(time > 0) {
+        timerId = setTimeout(countDown, 1000)
+        time--
+        document.querySelector('#timer').innerHTML = time
+    }
+    if(time === 0) {
+        determineWinner({player, enemy, timerId})
+    } 
+}
+
 // the animation
 function animate () {
     window.requestAnimationFrame(animate)
@@ -127,11 +152,12 @@ function animate () {
     player.update()
     enemy.update()
 
-    if(time < 0) {
-        clearInterval(countDown)
-    } else {
-        timerElement.innerText = JSON.stringify(time)
-    }
+    // ALSO MY CODE, THE TUTORIAL DOES IT DIFFERENTLY
+    // if(time < 0) {
+    //     clearInterval(countDown)
+    // } else {
+    //     timerElement.innerText = JSON.stringify(time)
+    // }
     
 
     // player movement
@@ -152,13 +178,17 @@ function animate () {
     // collision checking
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
         player.isAttacking = false
-        enemy.health-= 20
+        enemy.health > 0 ? enemy.health-= 20 : enemy.health = 0 // if the health is zero or less, it's becomes 0
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
     if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
         enemy.isAttacking = false
-        player.health-= 20
+        player.health > 0 ? player.health-= 20 : player.health = 0
         document.querySelector('#playerHealth').style.width = player.health + '%'
+    }
+    // check for victory
+    if(enemy.health <= 0 || player.health <= 0) {
+        determineWinner({player, enemy, timerId})
     }
 }
 
@@ -169,6 +199,7 @@ function animate () {
 
 
 animate()
+countDown()
 
 // control listeners
 window.addEventListener('keydown', (e) => {
