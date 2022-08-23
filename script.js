@@ -7,7 +7,7 @@ const canvasContext = canvas.getContext('2d');
 
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
-
+let gameOver = false // not on the tutorial
 
 const gravity = 0.5
 
@@ -119,6 +119,7 @@ function collisionCheck ({attacker, target}) { // a function to check if the att
 
 function determineWinner({player, enemy, timerId}) {
     clearTimeout(timerId)
+    gameOver = true
     document.querySelector('#endMessage').style.display = 'flex'
     if(player.health === enemy.health) {
         document.querySelector('#endMessage').innerHTML = 'Tie'
@@ -146,6 +147,7 @@ function countDown() { // the timer for the round
 
 // the animation
 function animate () {
+    if(gameOver) return // the animation stops when the game is over, might look better with sprite images added
     window.requestAnimationFrame(animate)
     canvasContext.fillStyle = 'black'
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
