@@ -160,12 +160,6 @@ function animate () {
     }
 }
 
-
-
-
-
-
-
 animate()
 countDown()
 
@@ -175,12 +169,12 @@ window.addEventListener('keydown', (e) => {
         // player
         case 'd': keys.d.isPressed = true; player.lastKey = e.key; break // move right
         case 'a': keys.a.isPressed = true; player.lastKey = e.key; break // move left
-        case 'w': player.velocity.y = -10; break // jump
+        case 'w': player.velocity.y === 0 ? player.velocity.y = -10 : player.velocity.y+=1 ; break // jump -- the ternary prevents jumping while midair 
         case ' ': player.attack(); break // attack
         // enemy
         case 'ArrowRight': keys.ArrowRight.isPressed = true; enemy.lastKey = 'ArrowRight'; break // move right
         case 'ArrowLeft': keys.ArrowLeft.isPressed = true; enemy.lastKey = 'ArrowLeft'; break // move left
-        case 'ArrowUp': enemy.velocity.y = -10; break // jump
+        case 'ArrowUp': enemy.velocity.y === 0 ? enemy.velocity.y = -10 : enemy.velocity.y+=1; break // jump -- the ternary prevents jumping while midair
         case 'ArrowDown': enemy.attack(); break // attack
     }
 }) 
