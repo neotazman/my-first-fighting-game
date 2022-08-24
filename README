@@ -4,6 +4,8 @@ My First Fighting Game
 
 this is based from a youtube tutorial: https://www.youtube.com/watch?v=vyqbNFMDRGQ&t=99s
 
+Sprite images come from: https://edermunizz.itch.io/free-pixel-art-plataformer-painted-style?download
+
 # Things I Changed
 
 html (HTML5)
@@ -18,7 +20,9 @@ css
 
     e) it would be much harder for me to figure out how to do reverseHealthBar on my own, so i'm ignoring it for right now
 
-    f) gamestate
+    f) added gameOver
+
+    g) made a background class extending sprite with fewer arguments
 variable names (to something i understand)
 
 

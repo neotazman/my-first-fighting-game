@@ -1,15 +1,40 @@
 // the character sprites
 class Sprite {
-    constructor({position, imgSrc}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
+    constructor({position, imageSource}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
         this.position = position
-        this.width = 20
+        this.width = 90
         this.height = 50
+        this.image = new Image()
+        this.image.src = imageSource
     }
-    draw () {}
+    draw () {
+        canvasContext.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    }
     update () {
         this.draw() // if you call the draw method inside of the update method, you don't have to call both functions to animate
     }
 }
+
+class Background extends Sprite { // the position for the background will always be "x: 0, y: 0" so I extended the Sprite class to need fewer arguments
+    constructor({backgroundImage}) { //
+        super ({
+            position: {
+                x: 0,
+                y: 0,
+            },
+            imageSource: backgroundImage,
+        })
+        this.width = canvasContext.canvas.width
+        this.height = canvasContext.canvas.height
+    }
+}
+
+// class MovingBackground extends Background {
+//     constructor({backgroundImage}) {
+//         super({backgroundImage})
+
+//     }
+// }
 
 class Fighter {
     constructor({position, velocity, color = 'green', offset}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in

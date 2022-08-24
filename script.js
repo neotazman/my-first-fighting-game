@@ -1,6 +1,13 @@
 // TUTORIAL FOR THIS PROJECT
 // https://www.youtube.com/watch?v=vyqbNFMDRGQ&t=99s
-// Fighter and Sprite are imported from classes.js
+// stopping point 1:59:51 / 3:56:19
+
+// Sprite images come from https://edermunizz.itch.io/free-pixel-art-plataformer-painted-style?download
+
+// Fighter, Sprite, and Background are imported from classes.js
+
+
+
 
 // the canvas element
 const canvas = document.querySelector('canvas');
@@ -12,7 +19,18 @@ let gameOver = false // not on the tutorial
 
 const gravity = 0.5
 
-
+//the background -- isn't perfect but good enough  
+const background1 = new Background({
+    backgroundImage: './Free Pixel Art plataformer painted style/PNG/Mountains/Background.png'
+})
+let backgrounds = [background1]
+for(let i = 1; i <= 7; i++) {
+    let newBackground = new Background({
+        backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim1.png`
+    })
+    backgrounds.push(newBackground)
+}
+console.log(backgrounds)
 // the player
 const player = new Fighter({
     position: {x: 0, y: 0},
@@ -97,6 +115,8 @@ function animate () {
     window.requestAnimationFrame(animate)
     canvasContext.fillStyle = 'black'
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
+    // background1.update()
+    backgrounds.forEach(background => background.update())
     player.update()
     enemy.update()
 
