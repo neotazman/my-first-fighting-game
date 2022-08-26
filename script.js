@@ -16,21 +16,35 @@ const canvasContext = canvas.getContext('2d');
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
 let gameOver = false // not on the tutorial
+let backgroundFlicker = true
 
 const gravity = 0.5
 
-//the background -- isn't perfect but good enough  
-const background1 = new Background({
+// the background -- isn't perfect but good enough  
+const FirstBackground = new Background({
     backgroundImage: './Free Pixel Art plataformer painted style/PNG/Mountains/Background.png'
 })
-let backgrounds = [background1]
-for(let i = 1; i <= 7; i++) {
+let backgrounds1 = [FirstBackground]
+let backgrounds2 = [FirstBackground]
+
+// the animation
+for(let i = 1; i <= 7; i++) { // luckily the the layers all have a number in the filename. will do the animations later
     let newBackground = new Background({
         backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim1.png`
     })
-    backgrounds.push(newBackground)
+    backgrounds1.push(newBackground)
 }
-console.log(backgrounds)
+for(let i = 1; i <= 6; i++) {
+    let newBackground = new Background({
+        backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim2.png`
+    })
+    backgrounds2.push(newBackground)
+}
+function animationSwitch() {
+    backgroundFlicker ? backgroundFlicker = false : backgroundFlicker = true
+}
+let backgroundChange = setInterval(animationSwitch, 500)
+
 // the player
 const player = new Fighter({
     position: {x: 0, y: 0},
@@ -83,6 +97,7 @@ function collisionCheck ({attacker, target}) { // a function to check if the att
 
 function determineWinner({player, enemy, timerId}) {
     clearTimeout(timerId)
+    clearInterval(backgroundChange)
     gameOver = true
     document.querySelector('#endMessage').style.display = 'flex'
     if(player.health === enemy.health) {
@@ -116,7 +131,12 @@ function animate () {
     canvasContext.fillStyle = 'black'
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
     // background1.update()
-    backgrounds.forEach(background => background.update())
+    if(backgroundFlicker) {
+        backgrounds1.forEach(background => background.update()) // has all the background layers in order
+    } else {
+        backgrounds2.forEach(background => background.update()) // has all the background layers in order
+    }
+    
     player.update()
     enemy.update()
 
