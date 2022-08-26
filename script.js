@@ -24,21 +24,34 @@ const gravity = 0.5
 const FirstBackground = new Background({
     backgroundImage: './Free Pixel Art plataformer painted style/PNG/Mountains/Background.png'
 })
+// the two arrays to switch between for the animation
 let backgrounds1 = [FirstBackground]
 let backgrounds2 = [FirstBackground]
 
 // the animation
-for(let i = 1; i <= 7; i++) { // luckily the the layers all have a number in the filename. will do the animations later
+for(let i = 1; i <= 7; i++) { // luckily the the layers all have a number in the filename
     let newBackground = new Background({
         backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim1.png`
     })
     backgrounds1.push(newBackground)
+    if(i === 1 || i === 3) {
+        let cloundBackground = new Background({ // that's how it's actually spelled, i didn't want to change it
+            backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} clound anim1.png`
+        })
+        backgrounds2.push(cloundBackground)
+    } 
 }
 for(let i = 1; i <= 6; i++) {
     let newBackground = new Background({
         backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim2.png`
     })
     backgrounds2.push(newBackground)
+    if(i === 1 || i === 3) {
+        let cloundBackground = new Background({
+            backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} clound anim2.png`
+        })
+        backgrounds2.push(cloundBackground)
+    } 
 }
 function animationSwitch() {
     backgroundFlicker ? backgroundFlicker = false : backgroundFlicker = true

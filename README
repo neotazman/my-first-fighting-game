@@ -8,21 +8,24 @@ Sprite images come from: https://edermunizz.itch.io/free-pixel-art-plataformer-p
 
 # Things I Changed
 
-html (HTML5)
-css 
+# html (HTML5)
+
+# css 
     a) style.css as opposed to inline
 
     b) % as opposed to pixels
 
-    c) gameInfo is set to flex (he changed to that anyway)
+    c) it would be much harder for me to figure out how to do reverseHealthBar on my own, so i'm ignoring it for right now
 
-    d) did the timer on my own without watching the video
+# javascript
 
-    e) it would be much harder for me to figure out how to do reverseHealthBar on my own, so i'm ignoring it for right now
+    a) did the timer on my own without watching the video
 
-    f) added gameOver
+    b) added gameOver
 
-    g) made a background class extending sprite with fewer arguments
+    c) made a background class extending sprite with fewer arguments
 variable names (to something i understand)
+
+    d) the background sprites I used were animated, so I added in functions to animate them
 
 
