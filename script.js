@@ -4,7 +4,8 @@
 
 // Sprite images come from https://edermunizz.itch.io/free-pixel-art-plataformer-painted-style?download
 
-// Fighter, Sprite, and Background are imported from classes.js
+// Fighter, Sprite, and Background are seen from classes.js
+// collisionCheck, determineWinner, and timer related functions are seen from utils.js
 
 
 
@@ -16,19 +17,19 @@ const canvasContext = canvas.getContext('2d');
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 
 let gameOver = false // not on the tutorial
-let backgroundFlicker = true
+let backgroundFlicker = true // for switching between two frames
 
 const gravity = 0.5
 
 // the background -- isn't perfect but good enough  
-const FirstBackground = new Background({
+const firstBackground = new Background({
     backgroundImage: './Free Pixel Art plataformer painted style/PNG/Mountains/Background.png'
 })
 // the two arrays to switch between for the animation
-let backgrounds1 = [FirstBackground]
-let backgrounds2 = [FirstBackground]
+let backgrounds1 = [firstBackground]
+let backgrounds2 = [firstBackground]
 
-// the animation
+// the background animation
 for(let i = 1; i <= 7; i++) { // luckily the the layers all have a number in the filename
     let newBackground = new Background({
         backgroundImage: `./Free Pixel Art plataformer painted style/PNG/Mountains/Layer ${i} anim1.png`
@@ -56,7 +57,7 @@ for(let i = 1; i <= 6; i++) {
 function animationSwitch() {
     backgroundFlicker ? backgroundFlicker = false : backgroundFlicker = true
 }
-let backgroundChange = setInterval(animationSwitch, 500)
+let backgroundChange = setInterval(animationSwitch, 800) // this gets cleared in determine winner
 
 // the player
 const player = new Fighter({
@@ -72,6 +73,14 @@ const enemy = new Fighter({
     velocity: {x: 0, y: 1},
     color: 'blue',
     offset: {x: -40, y: 0},
+})
+
+const bomb1 = new Sprite({
+    position: {x: 50, y: 30},
+    imageSource: './Free Bomb Sprite/BOM.BUM.png',
+    scale: 2,
+    verticalFrames: 5,
+    horizontalFrames: 5,
 })
 
 // control options
@@ -99,49 +108,12 @@ const keys = {
     // },
 }
 
-function collisionCheck ({attacker, target}) { // a function to check if the attack hit the target
-    return (
-        attacker.attackBox.position.x + attacker.attackBox.width >= target.position.x && 
-        attacker.attackBox.position.x <= target.position.x + target.width && 
-        attacker.attackBox.position.y + attacker.attackBox.height >= target.position.y && 
-        attacker.attackBox.position.y <= target.position.y + target.height
-    )
-}
-
-function determineWinner({player, enemy, timerId}) {
-    clearTimeout(timerId)
-    clearInterval(backgroundChange)
-    gameOver = true
-    document.querySelector('#endMessage').style.display = 'flex'
-    if(player.health === enemy.health) {
-        document.querySelector('#endMessage').innerHTML = 'Tie'
-    } else if (player.health > enemy.health) {
-        document.querySelector('#endMessage').innerHTML = 'Player 1 Wins'
-    } else if (player.health < enemy.health) {
-        document.querySelector('#endMessage').innerHTML = 'Player 2 Wins'
-    }
-}
-
-// const timerElement = document.getElementById('timer')
-let time = 60
-//let countDown = setInterval(() => {time--}, 1000) // this was what i came up with, below is the way he did it
-let timerId
-function countDown() { // the timer for the round
-    if(time > 0) {
-        timerId = setTimeout(countDown, 1000)
-        time--
-        document.querySelector('#timer').innerHTML = time
-    }
-    if(time === 0) {
-        determineWinner({player, enemy, timerId})
-    } 
-}
-
 // the animation
 function animate () {
     if(gameOver) return // the animation stops when the game is over, might look better with sprite images added
     window.requestAnimationFrame(animate)
-    canvasContext.fillStyle = 'black'
+    // just as a backup if the background animation doesn't work
+    canvasContext.fillStyle = 'green' // is grass at the bottom
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
     // background1.update()
     if(backgroundFlicker) {
@@ -149,7 +121,7 @@ function animate () {
     } else {
         backgrounds2.forEach(background => background.update()) // has all the background layers in order
     }
-    
+    bomb1.update()
     player.update()
     enemy.update()
 
