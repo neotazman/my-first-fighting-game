@@ -14,9 +14,7 @@ class Sprite {
         this.currentXFrame = 0
         this.currentYFrame = 0
         this.framesElapsed = 0
-        // this.yFramesElapsed = 0
         this.frameHold = 5
-        // this.yFrameHold = 0
     }
     draw () {
         canvasContext.drawImage(
@@ -61,6 +59,22 @@ class Background extends Sprite { // the position for the background will always
         })
         this.width = canvasContext.canvas.width
         this.height = canvasContext.canvas.height - groundHeight
+    }
+}
+
+class Bomb extends Sprite { // for multiple bombs throughout the background
+    constructor({position, scale}) {
+        super({
+            position: {
+                x: position.x,
+                y: position.y,
+            },
+            // the sprite and animation will always be the same
+            imageSource: './Free Bomb Sprite/BOM.BUM.png',
+            scale: scale,
+            verticalFrames: 5,
+            horizontalFrames: 5,
+        })
     }
 }
 
