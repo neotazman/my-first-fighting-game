@@ -17,7 +17,7 @@ class Sprite {
         this.frameHold = 5
     }
     draw () {
-        canvasContext.drawImage(
+        canvasContext.drawImage( 
             this.image, 
             this.currentXFrame * (this.image.width / this.horizontalFrames), 
             this.currentYFrame * (this.image.height / this.verticalFrames), 
@@ -65,29 +65,25 @@ class Background extends Sprite { // the position for the background will always
 class Bomb extends Sprite { // for multiple bombs throughout the background
     constructor({position, scale}) {
         super({
-            position: {
-                x: position.x,
-                y: position.y,
-            },
+            position,
             // the sprite and animation will always be the same
             imageSource: './Free Bomb Sprite/BOM.BUM.png',
-            scale: scale,
+            scale,
             verticalFrames: 5,
             horizontalFrames: 5,
         })
     }
 }
 
-// class MovingBackground extends Background {
-//     constructor({backgroundImage}) {
-//         super({backgroundImage})
-
-//     }
-// }
-
-class Fighter {
-    constructor({position, velocity, color = 'green', offset}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
-        this.position = position
+class Fighter extends Sprite { // the characters that are fighting
+    constructor({position, velocity, color = 'green', offset, imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in as long as you say what arguments they are
+        super({
+            position,
+            imageSource,
+            scale,
+            horizontalFrames,
+            verticalFrames,
+        })
         this.velocity = velocity
         this.width = 20
         this.height = 50
@@ -104,17 +100,6 @@ class Fighter {
         this.color = color
         this.isAttacking
         this.health = 100 //DO NOT RAISE ABOVE 100 -- it's being parsed into a percentage for the css
-    }
-    draw () {
-        canvasContext.fillStyle = this.color
-        canvasContext.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-        // attack box
-        if(this.isAttacking) { // will only show attack boxes while attacking
-            canvasContext.fillStyle = 'goldenrod'
-            canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)            
-        }
-
     }
     update () {
         this.draw() // if you call the draw method inside of the update method, you don't have to call both functions to animate

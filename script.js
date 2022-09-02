@@ -61,22 +61,24 @@ let backgroundChange = setInterval(animationSwitch, 800) // this gets cleared in
 
 //create random bombs in the background
 let bombs = []
-function throwXBombs(x) {
+function throwXBombs(x) { // i could've made the bomb class have all this logic, but I might one day have specific locations and size
     for (let i = 1; i <= x; i++) { // creating an array of randomly sized bombs in random places on the map
-        let newBomb = new Bomb({position: {x: Math.random() * canvas.width - 50, y: Math.random() * (canvas.height / 2) - groundHeight}, scale: Math.random() * 3})
+        let newBomb = new Bomb({position: {x: Math.random() * (canvas.width - 50), y: Math.random() * (canvas.height / 2) - groundHeight}, scale: Math.random() * 3})
         bombs.push(newBomb)
     }
     console.log(bombs)
 }
-throwXBombs(Math.random() * 33)
-
+throwXBombs(Math.random() * 33) // throw between 0 and 33 bombs in random places
 
 // the player
 const player = new Fighter({
     position: {x: 0, y: 0},
     velocity: {x: 0, y: 1},
-    color: 'crimson',
-    offset: {x: 0, y: 0}
+    offset: {x: 0, y: 0},
+    imageSource: './Martial Hero 3/Sprite/Idle.png',
+    verticalFrames: 1,
+    horizontalFrames: 10,
+    scale: 2,
 })
 
 // the enemy
@@ -85,20 +87,10 @@ const enemy = new Fighter({
     velocity: {x: 0, y: 1},
     color: 'blue',
     offset: {x: -40, y: 0},
+    imageSource: './Martial Hero 2/Sprites/Idle.png',
+    horizontalFrames: 4,
 })
-
-// const bomb1 = new Sprite({
-//     position: {x: 50, y: 30},
-//     imageSource: './Free Bomb Sprite/BOM.BUM.png',
-//     scale: 2,
-//     verticalFrames: 5,
-//     horizontalFrames: 5,
-// })
-
-const bomb1 = new Bomb({
-    position: {x: 0, y: 10},
-    scale: 2
-})
+console.log(enemy)
 
 // control options
 const keys = {
@@ -212,5 +204,3 @@ window.addEventListener('keyup', (e) => {
         case 'ArrowUp': break
     }
 })  
-
-console.log(player)
