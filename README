@@ -32,6 +32,6 @@ variable names (to something i understand)
 
     e) didn't do the shop animation -- doing a bomb animation with a two dimensional sprite
 
-    f) 
+    f) added a groundHeight -- a line of code is commented out because it supposedly fixes a bug that i'm not getting
 
 

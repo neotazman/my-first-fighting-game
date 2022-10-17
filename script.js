@@ -66,7 +66,7 @@ function throwXBombs(x) { // i could've made the bomb class have all this logic,
         let newBomb = new Bomb({position: {x: Math.random() * (canvas.width - 50), y: Math.random() * (canvas.height / 2) - groundHeight}, scale: Math.random() * 3})
         bombs.push(newBomb)
     }
-    console.log(bombs)
+    console.log(bombs.length + ' bombs')
 }
 throwXBombs(Math.random() * 33) // throw between 0 and 33 bombs in random places
 
@@ -74,21 +74,38 @@ throwXBombs(Math.random() * 33) // throw between 0 and 33 bombs in random places
 const player = new Fighter({
     position: {x: 0, y: 0},
     velocity: {x: 0, y: 1},
-    offset: {x: 0, y: 0},
+    offset: {x: 35, y: groundHeight},
     imageSource: './Martial Hero 3/Sprite/Idle.png',
-    verticalFrames: 1,
     horizontalFrames: 10,
     scale: 2,
+    sprites: {
+        idle: {
+            imageSource: './Martial Hero 3/Sprite/Idle.png',
+            horizontalFrames: 10
+        },
+        run: {
+            imageSource: './Martial Hero 3/Sprite/Run.png',
+            horizontalFrames: 8
+        },
+        jump: {
+            imageSource: './Martial Hero 3/Sprite/Going Up.png',
+            horizontalFrames: 3
+        },
+        fall: {
+            imageSource: './Martial Hero 3/Sprite/Going Down.png',
+            horizontalFrames: 3
+        },
+    }
 })
 
 // the enemy
 const enemy = new Fighter({
     position: {x: 60, y: 80},
     velocity: {x: 0, y: 1},
-    color: 'blue',
-    offset: {x: -40, y: 0},
+    offset: {x: -40, y: groundHeight},
     imageSource: './Martial Hero 2/Sprites/Idle.png',
     horizontalFrames: 4,
+    scale: 3,
 })
 console.log(enemy)
 
@@ -146,8 +163,18 @@ function animate () {
     player.velocity.x = 0
     if(keys.a.isPressed && player.lastKey === 'a') {
         player.velocity.x = -5
+        player.switchSprite('run')
     } else if(keys.d.isPressed && player.lastKey === 'd') {
         player.velocity.x = 5
+        player.switchSprite('run')
+    } else {
+        player.switchSprite('idle')
+    }
+    // player jumping
+    if(player.velocity.y < 0) {
+        player.switchSprite('jump')
+    } else if(player.velocity.y > 0) {
+        player.switchSprite('fall')
     }
     // enemy movement
     enemy.velocity.x = 0
