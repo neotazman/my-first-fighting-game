@@ -81,19 +81,23 @@ const player = new Fighter({
     sprites: {
         idle: {
             imageSource: './Martial Hero 3/Sprite/Idle.png',
-            horizontalFrames: 10
+            horizontalFrames: 10,
         },
         run: {
             imageSource: './Martial Hero 3/Sprite/Run.png',
-            horizontalFrames: 8
+            horizontalFrames: 8,
         },
         jump: {
             imageSource: './Martial Hero 3/Sprite/Going Up.png',
-            horizontalFrames: 3
+            horizontalFrames: 3,
         },
         fall: {
             imageSource: './Martial Hero 3/Sprite/Going Down.png',
-            horizontalFrames: 3
+            horizontalFrames: 3,
+        },
+        attack1: {
+            imageSource: './Martial Hero 3/Sprite/Attack1.png',
+            horizontalFrames: 7,
         },
     }
 })
@@ -102,12 +106,29 @@ const player = new Fighter({
 const enemy = new Fighter({
     position: {x: 60, y: 80},
     velocity: {x: 0, y: 1},
-    offset: {x: -40, y: groundHeight},
+    offset: {x: -40, y: groundHeight + 30},
     imageSource: './Martial Hero 2/Sprites/Idle.png',
     horizontalFrames: 4,
     scale: 3,
+    sprites: {
+        idle: {
+            imageSource: './Martial Hero 2/Sprites/Idle.png',
+            horizontalFrames: 4,
+        },
+        run: {
+            imageSource: './Martial Hero 2/Sprites/Run.png',
+            horizontalFrames: 8,
+        },
+        jump: {
+            imageSource: './Martial Hero 2/Sprites/Jump.png',
+            horizontalFrames: 2,
+        },
+        fall: {
+            imageSource: './Martial Hero 2/Sprites/Fall.png',
+            horizontalFrames: 2,
+        },
+    }
 })
-console.log(enemy)
 
 // control options
 const keys = {
@@ -149,7 +170,7 @@ function animate () {
     }
     bombs.forEach(bomb => bomb.update())
     player.update()
-    enemy.update()
+    //enemy.update()
 
     // ALSO MY CODE, THE TUTORIAL DOES IT DIFFERENTLY
     // if(time < 0) {
@@ -177,17 +198,26 @@ function animate () {
         player.switchSprite('fall')
     }
     // enemy movement
-    enemy.velocity.x = 0
-    if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5
-    } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x = 5
-    }
-
+    // enemy.velocity.x = 0
+    // if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
+    //     enemy.velocity.x = -5
+    //     enemy.switchSprite('run')
+    // } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
+    //     enemy.velocity.x = 5
+    //     enemy.switchSprite('run')
+    // } else {
+    //     enemy.switchSprite('idle')
+    // }
+    // // enemy jumping
+    // if(enemy.velocity.y < 0) {
+    //     enemy.switchSprite('jump')
+    // } else if(enemy.velocity.y > 0) {
+    //     enemy.switchSprite('fall')
+    // }
     // collision checking
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
         player.isAttacking = false
-        enemy.health > 0 ? enemy.health-= 20 : enemy.health = 0 // if the health is zero or less, it's becomes 0
+        enemy.health > 0 ? enemy.health-= 20 : enemy.health = 0 // if the health is zero or less, it becomes 0
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
     if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
