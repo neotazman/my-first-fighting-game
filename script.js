@@ -107,25 +107,29 @@ const enemy = new Fighter({
     position: {x: 60, y: 80},
     velocity: {x: 0, y: 1},
     offset: {x: -40, y: groundHeight + 30},
-    imageSource: './Martial Hero 2/Sprites/Idle.png',
+    imageSource: './Kenji/Sprites/Idle.png',
     horizontalFrames: 4,
     scale: 3,
     sprites: {
         idle: {
-            imageSource: './Martial Hero 2/Sprites/Idle.png',
+            imageSource: './Kenji/Sprites/Idle.png',
             horizontalFrames: 4,
         },
         run: {
-            imageSource: './Martial Hero 2/Sprites/Run.png',
+            imageSource: './Kenji/Sprites/Run.png',
             horizontalFrames: 8,
         },
         jump: {
-            imageSource: './Martial Hero 2/Sprites/Jump.png',
+            imageSource: './Kenji/Sprites/Jump.png',
             horizontalFrames: 2,
         },
         fall: {
-            imageSource: './Martial Hero 2/Sprites/Fall.png',
+            imageSource: './Kenji/Sprites/Fall.png',
             horizontalFrames: 2,
+        },
+        attack1: {
+            imageSource: './Kenji/Sprite/Attack1.png',
+            horizontalFrames: 4,
         },
     }
 })
@@ -170,7 +174,7 @@ function animate () {
     }
     bombs.forEach(bomb => bomb.update())
     player.update()
-    //enemy.update()
+    enemy.update()
 
     // ALSO MY CODE, THE TUTORIAL DOES IT DIFFERENTLY
     // if(time < 0) {
@@ -198,22 +202,22 @@ function animate () {
         player.switchSprite('fall')
     }
     // enemy movement
-    // enemy.velocity.x = 0
-    // if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
-    //     enemy.velocity.x = -5
-    //     enemy.switchSprite('run')
-    // } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
-    //     enemy.velocity.x = 5
-    //     enemy.switchSprite('run')
-    // } else {
-    //     enemy.switchSprite('idle')
-    // }
-    // // enemy jumping
-    // if(enemy.velocity.y < 0) {
-    //     enemy.switchSprite('jump')
-    // } else if(enemy.velocity.y > 0) {
-    //     enemy.switchSprite('fall')
-    // }
+    enemy.velocity.x = 0
+    if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -5
+        enemy.switchSprite('run')
+    } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
+        enemy.velocity.x = 5
+        enemy.switchSprite('run')
+    } else {
+        enemy.switchSprite('idle')
+    }
+    // enemy jumping
+    if(enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if(enemy.velocity.y > 0) {
+        enemy.switchSprite('fall')
+    }
     // collision checking
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
         player.isAttacking = false

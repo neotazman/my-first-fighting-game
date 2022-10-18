@@ -137,7 +137,7 @@ class Fighter extends Sprite { // the characters that are fighting
         }, 100)
     }
     switchSprite(sprite) {
-        if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames - 1) return
+        if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames) return
         switch(sprite) {
             case 'idle':
                 if(this.image !== this.sprites.idle.image) {
