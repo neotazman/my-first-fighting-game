@@ -78,7 +78,7 @@ class Bomb extends Sprite { // for multiple bombs throughout the background
 }
 
 class Fighter extends Sprite { // the characters that are fighting
-    constructor({position, velocity, color = 'green', imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}, sprites}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in as long as you say what arguments they are
+    constructor({position, velocity, color = 'green', imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}, sprites, attackBox = {offset: {}, width: undefined, height: undefined}}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in as long as you say what arguments they are
         super({
             position,
             imageSource,
@@ -96,9 +96,9 @@ class Fighter extends Sprite { // the characters that are fighting
                 x: this.position.x,
                 y: this.position.y,
             },
-            offset, // an object being passed directly into this.attackBox
-            width: 60,
-            height: 10,
+            offset: attackBox.offset, // an object being passed directly into this.attackBox
+            width: attackBox.width,
+            height: attackBox.height,
         }
         this.color = color
         this.isAttacking
@@ -115,7 +115,9 @@ class Fighter extends Sprite { // the characters that are fighting
         this.animateFrames()
         // updates the shallow copy of this
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
-        this.attackBox.position.y = this.position.y
+        this.attackBox.position.y = this.position.y + this.attackBox.offset.y
+
+        canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
 
         // change the position based on the velocity
         this.position.x += this.velocity.x 
@@ -137,7 +139,7 @@ class Fighter extends Sprite { // the characters that are fighting
         }, 100)
     }
     switchSprite(sprite) {
-        if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames) return
+        if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames - 1) return
         switch(sprite) {
             case 'idle':
                 if(this.image !== this.sprites.idle.image) {

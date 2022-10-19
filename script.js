@@ -99,7 +99,14 @@ const player = new Fighter({
             imageSource: './Martial Hero 3/Sprite/Attack1.png',
             horizontalFrames: 7,
         },
-    }
+    },
+    attackBox: {
+        offset: {
+            x: 30, y: 0,
+        },
+        width: 35,
+        height: 60,
+    },
 })
 
 // the enemy
@@ -128,10 +135,17 @@ const enemy = new Fighter({
             horizontalFrames: 2,
         },
         attack1: {
-            imageSource: './Kenji/Sprite/Attack1.png',
+            imageSource: './Kenji/Sprites/Attack1.png',
             horizontalFrames: 4,
         },
-    }
+    },
+    attackBox: {
+        offset: {
+            x: 50, y: 13,
+        },
+        width: 50,
+        height: 40,
+    },
 })
 
 // control options
@@ -219,7 +233,7 @@ function animate () {
         enemy.switchSprite('fall')
     }
     // collision checking
-    if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking) {
+    if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking && player.currentXFrame === 4) {
         player.isAttacking = false
         enemy.health > 0 ? enemy.health-= 20 : enemy.health = 0 // if the health is zero or less, it becomes 0
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
