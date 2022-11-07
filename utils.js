@@ -4,12 +4,16 @@ function collisionCheck ({attacker, target}) { // a function to check if the att
         attacker.attackBox.position.x <= target.position.x - target.offset.x * target.scale + target.width * target.scale && 
         attacker.attackBox.position.y + attacker.attackBox.height >= target.position.y - target.offset.y * target.scale && 
         attacker.attackBox.position.y <= target.position.y - target.offset.y * target.scale + target.height * target.scale
-    )
+    ) // the offset, height and width need to be multiplied by scale
+}
+
+function charactersCollide () {
+    return (player.position.x - player.offset.x * player.scale + player.width * player.scale >= enemy.position.x - enemy.offset.x * enemy.scale)
 }
 
 function determineWinner({player, enemy, timerId}) {
     clearTimeout(timerId)
-    clearInterval(backgroundChange)
+    // clearInterval(backgroundChange)
     gameOver = true
     document.querySelector('#endMessage').style.display = 'flex'
     if(player.health === enemy.health) {

@@ -34,4 +34,6 @@ variable names (to something i understand)
 
     f) added a groundHeight -- a line of code is commented out because it supposedly fixes a bug that i'm not getting
 
+    g) !!! kenji sprites are just flipped so I need to write if statements at every instance of animation loops to reverse the loop !!! I HAVE NOT FINISHED THIS
+
 

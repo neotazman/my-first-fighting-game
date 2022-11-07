@@ -99,6 +99,14 @@ const player = new Fighter({
             imageSource: './Martial Hero 3/Sprite/Attack1.png',
             horizontalFrames: 7,
         },
+        takeHit: {
+            imageSource: './Martial Hero 3/Sprite/Take Hit.png',
+            horizontalFrames: 3,
+        },
+        death: {
+            imageSource: './Martial Hero 3/Sprite/Death.png',
+            horizontalFrames: 11,
+        },
     },
     attackBox: {
         offset: {
@@ -138,6 +146,14 @@ const enemy = new Fighter({
             imageSource: './Kenji/Sprites/Attack1.png',
             horizontalFrames: 4,
         },
+        takeHit: {
+            imageSource: './Kenji/Sprites/Take hit.png',
+            horizontalFrames: 3,
+        },
+        death: {
+            imageSource: './Kenji/Sprites/Death.png',
+            horizontalFrames: 7,
+        },
     },
     attackBox: {
         offset: {
@@ -146,6 +162,7 @@ const enemy = new Fighter({
         width: 50,
         height: 40,
     },
+    reverseXFrames: true,
 })
 
 // control options
@@ -175,7 +192,7 @@ const keys = {
 
 // the animation
 function animate () {
-    if(gameOver) return // the animation stops when the game is over, might look better with sprite images added
+    // if(gameOver) return // won't show the character die if on
     window.requestAnimationFrame(animate)
     // just as a backup if the background animation doesn't work
     canvasContext.fillStyle = 'green' // is grass at the bottom
@@ -204,6 +221,10 @@ function animate () {
         player.velocity.x = -5
         player.switchSprite('run')
     } else if(keys.d.isPressed && player.lastKey === 'd') {
+        if(charactersCollide()) {
+            player.velocity.x = 0
+            return // characters can't run past each other -- an easy alternative to rewriting the code for when they're on opposite sides
+        }
         player.velocity.x = 5
         player.switchSprite('run')
     } else {
@@ -218,6 +239,10 @@ function animate () {
     // enemy movement
     enemy.velocity.x = 0
     if(keys.ArrowLeft.isPressed && enemy.lastKey === 'ArrowLeft') {
+        if(charactersCollide()) {
+            enemy.velocity.x = 0
+            return // for some reason, if they're both running toward each other when they collide, enemy won't stop until you let go of the key
+        } 
         enemy.velocity.x = -5
         enemy.switchSprite('run')
     } else if(keys.ArrowRight.isPressed && enemy.lastKey === 'ArrowRight') {
@@ -233,15 +258,23 @@ function animate () {
         enemy.switchSprite('fall')
     }
     // collision checking
+    // player
     if(collisionCheck({attacker: player, target: enemy}) && player.isAttacking && player.currentXFrame === 4) {
+        enemy.takeHit()
         player.isAttacking = false
-        enemy.health > 0 ? enemy.health-= 20 : enemy.health = 0 // if the health is zero or less, it becomes 0
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
-    if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking) {
+    if(player.isAttacking && player.currentXFrame === 4) {
+        player.isAttacking = false
+    }
+    // enemy
+    if(collisionCheck({attacker: enemy, target: player}) && enemy.isAttacking && enemy.currentXFrame === 2) {
+        player.takeHit()
         enemy.isAttacking = false
-        player.health > 0 ? player.health-= 20 : player.health = 0
         document.querySelector('#playerHealth').style.width = player.health + '%'
+    }
+    if(enemy.isAttacking && enemy.currentXFrame === 4) {
+        enemy.isAttacking = false
     }
     // check for victory
     if(enemy.health <= 0 || player.health <= 0) {

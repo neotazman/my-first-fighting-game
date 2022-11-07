@@ -2,7 +2,9 @@
 const groundHeight = 10
 // the character sprites
 class Sprite {
-    constructor({position, imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
+    constructor({position, imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}, reverseXFrames = false}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in
+        this.xFrameBasis = reverseXFrames ? horizontalFrames - 1 : 0 // the enemy sprite is flipped backwards, so this is to fix that
+        this.finalXFrame = reverseXFrames ? 0 : horizontalFrames - 1
         this.position = position
         this.width = 50
         this.height = 50
@@ -11,11 +13,12 @@ class Sprite {
         this.scale = scale
         this.horizontalFrames = horizontalFrames
         this.verticalFrames = verticalFrames
-        this.currentXFrame = 0
+        this.currentXFrame = this.xFrameBasis
         this.currentYFrame = 0
         this.framesElapsed = 0
         this.frameHold = 5
         this.offset = offset
+        this.reverseXFrames = reverseXFrames
     }
     draw () {
         canvasContext.drawImage( 
@@ -32,17 +35,32 @@ class Sprite {
     }
     animateFrames () { // the frame animation of the sprite
         this.framesElapsed++
-        if(this.framesElapsed % this.frameHold === 0) {
-            if(this.currentXFrame < this.horizontalFrames - 1) {
-                this.currentXFrame++
-            } else if(this.currentYFrame < this.verticalFrames - 1) {
-                this.currentXFrame = 0
-                this.currentYFrame++
-            } else {
-                this.currentXFrame = 0
-                this.currentYFrame = 0
+        if(!this.reverseXFrames) {
+            if(this.framesElapsed % this.frameHold === 0) {
+                if(this.currentXFrame < this.horizontalFrames - 1) {
+                    this.currentXFrame++
+                } else if(this.currentYFrame < this.verticalFrames - 1) {
+                    this.currentXFrame = this.xFrameBasis
+                    this.currentYFrame++
+                } else {
+                    this.currentXFrame = this.xFrameBasis
+                    this.currentYFrame = 0
+                }
             }
+        } else {
+            if(this.framesElapsed % this.frameHold === 0) {
+                if(this.currentXFrame > this.finalXFrame) {
+                    this.currentXFrame--
+                } else if(this.currentYFrame < this.verticalFrames - 1) {
+                    this.currentXFrame = this.xFrameBasis
+                    this.currentYFrame++
+                } else {
+                    this.currentXFrame = this.xFrameBasis
+                    this.currentYFrame = 0
+                }
+            }            
         }
+
     }
     update () {
         this.draw() // if you call the draw method inside of the update method, you don't have to call both functions to animate
@@ -78,7 +96,7 @@ class Bomb extends Sprite { // for multiple bombs throughout the background
 }
 
 class Fighter extends Sprite { // the characters that are fighting
-    constructor({position, velocity, color = 'green', imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}, sprites, attackBox = {offset: {}, width: undefined, height: undefined}}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in as long as you say what arguments they are
+    constructor({position, velocity, color = 'green', imageSource, scale = 1, horizontalFrames = 1, verticalFrames = 1, offset = {x: 0, y: 0}, sprites, attackBox = {offset: {}, width: undefined, height: undefined}, reverseXFrames = false}) { // apparantly if you put the parameters as an object, it doesn't matter what order you pass the arguments in as long as you say what arguments they are
         super({
             position,
             imageSource,
@@ -86,6 +104,7 @@ class Fighter extends Sprite { // the characters that are fighting
             horizontalFrames,
             verticalFrames,
             offset,
+            reverseXFrames,
         })
         this.velocity = velocity
         this.width = 50
@@ -104,6 +123,7 @@ class Fighter extends Sprite { // the characters that are fighting
         this.isAttacking
         this.health = 100 //DO NOT RAISE ABOVE 100 -- it's being parsed into a percentage for the css
         this.sprites = sprites
+        this.dead = false
 
         for(let sprite in this.sprites) {
             sprites[sprite].image = new Image()
@@ -112,12 +132,12 @@ class Fighter extends Sprite { // the characters that are fighting
     }
     update () {
         this.draw() // if you call the draw method inside of the update method, you don't have to call both functions to animate
-        this.animateFrames()
+        if(!this.dead) this.animateFrames()
         // updates the shallow copy of this
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y
 
-        canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
+        // canvasContext.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
 
         // change the position based on the velocity
         this.position.x += this.velocity.x 
@@ -138,14 +158,29 @@ class Fighter extends Sprite { // the characters that are fighting
         //     this.isAttacking = false
         // }, 100)
     }
+    takeHit() {
+        this.health > 0 ? this.health-= 20 : this.health = 0 // if the health is zero or less, it becomes 0
+        if(this.health === 0) {
+            this.switchSprite('death')
+        } else {
+            this.switchSprite('takeHit')
+        }
+    }
     switchSprite(sprite) {
+        if(this.image === this.sprites.death.image) {
+            if(this.currentXFrame === this.sprites.death.finalXFrame) this.dead = true
+            return
+        }
+        // attacking
         if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames - 1) return
+        // receiving attacks
+        if(this.image === this.sprites.takeHit.image && this.currentXFrame < this.sprites.takeHit.horizontalFrames - 1) return
         switch(sprite) {
             case 'idle':
                 if(this.image !== this.sprites.idle.image) {
                     this.image = this.sprites.idle.image
                     this.horizontalFrames = this.sprites.idle.horizontalFrames
-                    this.currentXFrame = 0
+                    this.currentXFrame = this.xFrameBasis
                     this.currentYFrame = 0
                 }
                 break
@@ -153,7 +188,7 @@ class Fighter extends Sprite { // the characters that are fighting
                 if(this.image !== this.sprites.run.image) {
                     this.image = this.sprites.run.image
                     this.horizontalFrames = this.sprites.run.horizontalFrames
-                    this.currentXFrame = 0
+                    this.currentXFrame = this.xFrameBasis
                     this.currentYFrame = 0
                 }
                 break
@@ -177,7 +212,23 @@ class Fighter extends Sprite { // the characters that are fighting
             if(this.image !== this.sprites.attack1.image) {
                 this.image = this.sprites.attack1.image
                 this.horizontalFrames = this.sprites.attack1.horizontalFrames
-                this.currentXFrame = 0
+                this.currentXFrame = this.xFrameBasis
+                this.currentYFrame = 0
+            }
+                break
+            case 'takeHit': 
+            if(this.image !== this.sprites.takeHit.image) {
+                this.image = this.sprites.takeHit.image
+                this.horizontalFrames = this.sprites.takeHit.horizontalFrames
+                this.currentXFrame = this.xFrameBasis
+                this.currentYFrame = 0
+            }
+                break
+            case 'death': 
+            if(this.image !== this.sprites.death.image) {
+                this.image = this.sprites.death.image
+                this.horizontalFrames = this.sprites.death.horizontalFrames
+                this.currentXFrame = this.xFrameBasis
                 this.currentYFrame = 0
             }
                 break
