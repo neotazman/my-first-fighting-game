@@ -134,9 +134,9 @@ class Fighter extends Sprite { // the characters that are fighting
     attack() {
         this.switchSprite('attack1')
         this.isAttacking = true
-        setTimeout(() => {
-            this.isAttacking = false
-        }, 100)
+        // setTimeout(() => {
+        //     this.isAttacking = false
+        // }, 100)
     }
     switchSprite(sprite) {
         if(this.image === this.sprites.attack1.image && this.currentXFrame < this.sprites.attack1.horizontalFrames - 1) return

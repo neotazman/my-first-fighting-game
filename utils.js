@@ -1,9 +1,9 @@
 function collisionCheck ({attacker, target}) { // a function to check if the attack hit the target
     return (
-        attacker.attackBox.position.x + attacker.attackBox.width >= target.position.x && 
-        attacker.attackBox.position.x <= target.position.x + target.width && 
-        attacker.attackBox.position.y + attacker.attackBox.height >= target.position.y && 
-        attacker.attackBox.position.y <= target.position.y + target.height
+        attacker.attackBox.position.x + attacker.attackBox.width >= target.position.x - target.offset.x * target.scale && 
+        attacker.attackBox.position.x <= target.position.x - target.offset.x * target.scale + target.width * target.scale && 
+        attacker.attackBox.position.y + attacker.attackBox.height >= target.position.y - target.offset.y * target.scale && 
+        attacker.attackBox.position.y <= target.position.y - target.offset.y * target.scale + target.height * target.scale
     )
 }
 
